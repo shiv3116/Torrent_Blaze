@@ -19,5 +19,3 @@ with open(config_file_path, 'r') as config_file:
 
 # Access the key-value pair
 PIRATEBAY_BASE_URL = config_dict['PIRATEBAY_BASE_URL']
-
-print(PIRATEBAY_BASE_URL)
