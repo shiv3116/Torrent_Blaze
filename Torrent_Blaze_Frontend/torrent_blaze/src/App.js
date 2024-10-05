@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
 import TorrentBlaze from './TorrentBlaze.png';
+import TorrentList from './torrentlist/TorrentList';
+import Loader from './spinner/Loader';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -8,10 +10,13 @@ function App() {
     all: true,
     games: false,
     videos: false,
-    music: false,
-    software: false,
+    audio: false,
+    apps: false,
     other: false,
   });
+
+  const [torrentData, setTorrentData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (event) => {
     setSearchQuery(event.target.value);
@@ -26,8 +31,8 @@ function App() {
         all: checked,
         games: false,
         videos: false,
-        music: false,
-        software: false,
+        audio: false,
+        apps: false,
         other: false,
       });
     } else {
@@ -41,7 +46,31 @@ function App() {
   };
 
   const handleSearch = () => {
-    alert(`Searching for: ${searchQuery}\nCategories: ${JSON.stringify(categories, null, 2)}`);
+    if(searchQuery!=='') {
+      setLoading(true);
+      let finalSearchQuery = searchQuery;
+      Object.entries(categories).forEach(([key, value]) => {
+        if (value && key !== 'all') {
+          finalSearchQuery += `&${key}=on`;
+        }
+      });
+      fetch(`http://127.0.0.1:8000/torrent_blaze/data/${finalSearchQuery}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Server responded with ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setTorrentData(data.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Fetch error: ", err);
+        alert("Error fetching data: " + err.message);
+        setLoading(false);
+      });
+    }
   };
 
   return (
@@ -91,8 +120,8 @@ function App() {
           <label>
             <input
               type="checkbox"
-              name="music"
-              checked={categories.music}
+              name="audio"
+              checked={categories.audio}
               onChange={handleCheckboxChange}
             />{' '}
             Music
@@ -100,8 +129,8 @@ function App() {
           <label>
             <input
               type="checkbox"
-              name="software"
-              checked={categories.software}
+              name="apps"
+              checked={categories.apps}
               onChange={handleCheckboxChange}
             />{' '}
             Software
@@ -117,6 +146,14 @@ function App() {
           </label>
         </div>
       </div>
+
+      {/* Conditionally render the Loader or TorrentList based on `loading` state */}
+      {loading ? (
+        <Loader /> // Show the loader when data is being fetched
+      ) : (
+        torrentData && <TorrentList torrents={torrentData} />
+      )}
+
       <footer className="footer">
         <p>&copy; 2024 Torrent Blaze. All rights reserved.</p>
       </footer>

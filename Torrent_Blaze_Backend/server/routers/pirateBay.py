@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 import requests
 from bs4 import BeautifulSoup
 from config.config import PIRATEBAY_BASE_URL
+import re
 
 router = APIRouter()
 
@@ -15,8 +16,17 @@ def scrape_data(url: str):
     
     soup = BeautifulSoup(response.text, 'html.parser')
 
+    approx_results = soup.find('h2')
+    approx_results = re.search(r'\(approx (\d+) found\)', approx_results.text)
+    if approx_results:
+        approx_results = approx_results.group(1)
+    else:
+        approx_results = ''
+
     # Initialize the results list
     results = []
+
+    results.append({'approxResults': approx_results})
 
     # Attempt to find the table
     table = soup.find('table', {'id': 'searchResult'})

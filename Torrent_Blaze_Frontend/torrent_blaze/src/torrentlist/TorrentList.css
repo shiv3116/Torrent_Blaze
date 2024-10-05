@@ -1,0 +1,74 @@
+/* TorrentList.css */
+.torrent-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #121212;
+  }
+  
+  .torrent-card {
+    background-color: #1e1e1e;
+    color: #e5e5e5;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .torrent-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+  }
+  
+  .torrent-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .torrent-name {
+    font-size: 1.2em;
+    color: #e50914;
+    margin: 0;
+  }
+  
+  .torrent-category,
+  .torrent-size,
+  .torrent-stats {
+    font-size: 0.9em;
+    margin: 0;
+  }
+  
+  .torrent-stats {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .seeders,
+  .leechers {
+    font-weight: bold;
+  }
+  
+  .magnet-link {
+    text-decoration: none;
+    color: #e50914;
+    margin-top: 10px;
+    border: 1px solid #e50914;
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+  
+  .magnet-link:hover {
+    background-color: #e50914;
+    color: #ffffff;
+  }
+
+  .overflow-name {
+    max-width: 15vw;
+    word-break: break-all
+  }
